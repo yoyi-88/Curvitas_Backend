@@ -39,22 +39,22 @@ app.post('/api/plan-route', async (req, res) => {
     PREFERENCIAS DEL USUARIO:
     - Estilo: [${intensidad}] (scenic = paisajes, curvy = muchas curvas, adventure = secundarias remotas).
     - Duración/Desvío: [${duracion}] 
-      * Si es "corta": Haz la ruta lo más directa posible hacia el destino, pero usando carreteras secundarias en lugar de autovías. Usa pocos waypoints (2-3).
-      * Si es "media": Haz desvíos lógicos para buscar buenas curvas, pero manteniendo una dirección general hacia el destino. (4-5 waypoints).
-      * Si es "larga": Crea una ruta épica de día completo. Da grandes rodeos deliberados para pasar por las mejores zonas moteras de la región. (6-8 waypoints).
+      * Si es "corta": Haz la ruta lo más directa posible hacia el destino por secundarias (2-3 waypoints).
+      * Si es "media": Haz desvíos lógicos para buscar curvas, avanzando siempre hacia el destino (4-5 waypoints).
+      * Si es "larga": Ruta épica. Grandes rodeos circulares o parabólicos (6-8 waypoints).
 
-    REGLAS ESTRICTAS:
+    REGLAS ESTRICTAS Y CRÍTICAS:
     1. EVITAR AUTOVÍAS: Aléjate de las autopistas (A- y AP-).
-    2. CARRETERAS Y COORDENADAS (CRÍTICO): Para fijar bien la ruta en el GPS, usa nombres exactos de poblaciones, puertos de montaña o carreteras (ej: "Puerto de Velefique", "Carretera A-397"). ADEMÁS, es obligatorio proporcionar las coordenadas GPS (latitud,longitud) aproximadas de ese punto para que el navegador no se confunda al trazar la ruta.
-    3. ORDEN LÓGICO: Los waypoints DEBEN estar en perfecto orden geográfico para evitar que Google Maps haga rutas en zig-zag.
+    2. COORDENADAS: Usa nombres exactos y proporciona obligatoriamente sus coordenadas GPS (latitud,longitud).
+    3. ORDEN SECUENCIAL: Los waypoints DEBEN estar en perfecto orden geográfico de inicio a fin.
+    4. PROHIBIDO EL EFECTO "YOYÓ" (IDA Y VUELTA): Está TERMINANTEMENTE PROHIBIDO elegir waypoints en carreteras sin salida (dead-ends) que obliguen a dar un cambio de sentido. La ruta debe tener un flujo continuo siempre hacia adelante. No se puede pasar dos veces por el mismo tramo de carretera.
 
     FORMATO DE SALIDA (JSON ESTRICTO):
-    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown (\`\`\`json), con esta estructura exacta:
+    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown, con esta estructura exacta:
     {
-      "explanation": "Breve descripción de 3 líneas sobre la ruta, mencionando si es directa o si tiene grandes desvíos según lo que pidió el usuario.",
+      "explanation": "Breve descripción de 3 líneas sobre la ruta.",
       "waypoints": [
-        { "name": "Puerto de la Ragua, Granada", "coords": "37.1166,-3.0289" },
-        { "name": "Carretera AL-3102, Velefique", "coords": "37.1895,-2.3941" }
+        { "name": "Puerto de la Ragua, Granada", "coords": "37.1166,-3.0289" }
       ]
     }
   `;
