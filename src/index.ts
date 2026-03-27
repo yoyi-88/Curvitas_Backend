@@ -41,23 +41,19 @@ app.post('/api/plan-route', async (req, res) => {
     - Duración/Desvío: [${duracion}] 
       * Si es "corta": Haz la ruta lo más directa posible hacia el destino por secundarias (2-3 waypoints).
       * Si es "media": Haz desvíos lógicos para buscar curvas, avanzando siempre hacia el destino (4-5 waypoints).
-      * Si es "larga": Ruta épica. Grandes rodeos circulares o parabólicos (6-8 waypoints).
+      * Si es "larga": Ruta épica con grandes rodeos circulares (6-8 waypoints).
 
     REGLAS ESTRICTAS Y CRÍTICAS:
     1. EVITAR AUTOVÍAS: Aléjate de las autopistas (A- y AP-).
-    2. COORDENADAS: Usa nombres exactos y proporciona obligatoriamente sus coordenadas GPS (latitud,longitud).
-    3. ORDEN SECUENCIAL: Los waypoints DEBEN estar en perfecto orden geográfico de inicio a fin.
-    4. PROHIBIDO EL EFECTO "YOYÓ" (IDA Y VUELTA): Está TERMINANTEMENTE PROHIBIDO elegir waypoints en carreteras sin salida (dead-ends) que obliguen a dar un cambio de sentido. La ruta debe tener un flujo continuo siempre hacia adelante. No se puede pasar dos veces por el mismo tramo de carretera.
+    2. NOMBRES DE PUNTOS: Usa nombres de poblaciones o puertos de montaña reales (ej: "Grazalema, Cádiz, España" o "Puerto de las Palomas, España"). NO envíes coordenadas, solo el nombre del lugar.
+    3. ORDEN SECUENCIAL: Los waypoints DEBEN estar en perfecto orden geográfico.
+    4. FLUJO CONTINUO (ANTI-YOYÓ): Elige solo lugares de paso. Prohibido elegir carreteras sin salida que obliguen a dar la vuelta.
 
     FORMATO DE SALIDA (JSON ESTRICTO):
-    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown, con esta estructura exacta:
+    Devuelve ÚNICAMENTE un objeto JSON válido, con esta estructura exacta:
     {
       "explanation": "Breve descripción de 3 líneas sobre la ruta.",
-      "waypoints": [
-        "Puerto de las Palomas, Cádiz, España",
-        "Grazalema, Cádiz, España",
-        "Zahara de la Sierra, Cádiz, España"
-      ]
+      "waypoints": ["Nombre del sitio 1, Provincia", "Nombre del sitio 2, Provincia"]
     }
   `;
 
