@@ -33,45 +33,34 @@ app.post('/api/plan-route', async (req, res) => {
   let waypointInstruction = "";
 
   const prompt = `
-    Eres un experto planificador de rutas en moto por España.
-    Diseña la mejor ruta desde [${origen}] hasta [${destino}].
+    Actúa como un experto planificador de rutas en moto por España.
+    Objetivo: Trazar una ruta desde [${origen}] hasta [${destino}].
     
-    PREFERENCIAS DEL USUARIO:
-    - Estilo: [${intensidad}] (scenic = paisajes, curvy = muchas curvas, adventure = secundarias remotas).
-    - Duración/Desvío: [${duracion}] 
-      * Si es "corta": Haz la ruta lo más directa posible hacia el destino por secundarias (2-3 waypoints).
-      * Si es "media": Haz desvíos lógicos para buscar curvas, avanzando siempre hacia el destino (4-5 waypoints).
-      * Si es "larga": Ruta épica con grandes rodeos circulares (6-8 waypoints).
+    Preferencias:
+    - Estilo: [${intensidad}] (curvy = muchas curvas, scenic = paisajes, adventure = secundarias).
+    - Duración: [${duracion}] (corta = directa por secundarias, media = con desvíos, larga = gran ruta).
 
-    REGLAS ESTRICTAS Y CRÍTICAS:
-    1. EVITAR AUTOVÍAS: Aléjate de las autopistas (A- y AP-).
-    2. NOMBRES DE PUNTOS: Usa nombres de poblaciones o puertos de montaña reales (ej: "Grazalema, Cádiz, España" o "Puerto de las Palomas, España"). NO envíes coordenadas, solo el nombre del lugar.
-    3. ORDEN SECUENCIAL: Los waypoints DEBEN estar en perfecto orden geográfico.
-    4. FLUJO CONTINUO (ANTI-YOYÓ): Elige solo lugares de paso. Prohibido elegir carreteras sin salida que obliguen a dar la vuelta.
+    REGLAS:
+    1. PROHIBIDO AUTOVÍAS: Evita carreteras tipo A- o AP-.
+    2. SOLO NOMBRES: Usa nombres de pueblos o puertos de montaña reales (Ej: "Grazalema, España"). NO uses coordenadas.
+    3. FLUJO CONTINUO: Los puntos deben ir en orden lógico de origen a destino para evitar que la ruta vuelva atrás.
 
     FORMATO DE SALIDA (JSON ESTRICTO):
-    Devuelve ÚNICAMENTE un objeto JSON válido, con esta estructura exacta:
     {
-      "explanation": "Breve descripción de 3 líneas sobre la ruta.",
-      "waypoints": ["Nombre del sitio 1, Provincia", "Nombre del sitio 2, Provincia"]
+      "explanation": "Breve descripción de la ruta.",
+      "waypoints": ["Pueblo 1, España", "Pueblo 2, España"]
     }
   `;
 
   try {
-    console.log("⏳ Enviando prompt a la IA...");
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-
     const cleanJson = text.replace(/```json|```/g, "").trim();
     const routeData = JSON.parse(cleanJson);
-
-    console.log(`✅ IA ha generado la ruta con éxito:`, routeData);
     res.json(routeData);
-
   } catch (error) {
-    console.error("❌ Error con la IA:", error);
-    res.status(500).json({ error: "No pudimos generar la ruta" });
+    res.status(500).json({ error: "Error generando ruta" });
   }
 });
 
