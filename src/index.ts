@@ -54,7 +54,9 @@ app.post('/api/plan-route', async (req, res) => {
     {
       "explanation": "Breve descripción de 3 líneas sobre la ruta.",
       "waypoints": [
-        { "name": "Puerto de la Ragua, Granada", "coords": "37.1166,-3.0289" }
+        "Puerto de las Palomas, Cádiz, España",
+        "Grazalema, Cádiz, España",
+        "Zahara de la Sierra, Cádiz, España"
       ]
     }
   `;
