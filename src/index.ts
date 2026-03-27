@@ -45,14 +45,17 @@ app.post('/api/plan-route', async (req, res) => {
 
     REGLAS ESTRICTAS:
     1. EVITAR AUTOVÍAS: Aléjate de las autopistas (A- y AP-).
-    2. CARRETERAS ESPECÍFICAS: Para fijar bien la ruta, usa nombres de poblaciones, puertos de montaña, o MEJOR AÚN, nombres exactos de carreteras (ejemplo: "Carretera A-397, Málaga, España" o "Puerto de Velefique, España").
+    2. CARRETERAS Y COORDENADAS (CRÍTICO): Para fijar bien la ruta en el GPS, usa nombres exactos de poblaciones, puertos de montaña o carreteras (ej: "Puerto de Velefique", "Carretera A-397"). ADEMÁS, es obligatorio proporcionar las coordenadas GPS (latitud,longitud) aproximadas de ese punto para que el navegador no se confunda al trazar la ruta.
     3. ORDEN LÓGICO: Los waypoints DEBEN estar en perfecto orden geográfico para evitar que Google Maps haga rutas en zig-zag.
 
     FORMATO DE SALIDA (JSON ESTRICTO):
-    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown (\`\`\`json), con esta estructura:
+    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown (\`\`\`json), con esta estructura exacta:
     {
       "explanation": "Breve descripción de 3 líneas sobre la ruta, mencionando si es directa o si tiene grandes desvíos según lo que pidió el usuario.",
-      "waypoints": ["Punto 1", "Punto 2"]
+      "waypoints": [
+        { "name": "Puerto de la Ragua, Granada", "coords": "37.1166,-3.0289" },
+        { "name": "Carretera AL-3102, Velefique", "coords": "37.1895,-2.3941" }
+      ]
     }
   `;
 
