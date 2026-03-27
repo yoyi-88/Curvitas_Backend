@@ -28,26 +28,31 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 
 app.post('/api/plan-route', async (req, res) => {
-  const { origen, destino, intensidad } = req.body;
+  const { origen, destino, intensidad, duracion } = req.body;
 
   let waypointInstruction = "";
 
   const prompt = `
     Eres un experto planificador de rutas en moto por España.
-    Tu misión es diseñar la mejor ruta posible desde [${origen}] hasta [${destino}].
-    El usuario ha elegido una intensidad de ruta tipo: [${intensidad}] (scenic = primar paisajes, curvy = primar carreteras de muchas curvas, adventure = primar carreteras secundarias y remotas).
+    Diseña la mejor ruta desde [${origen}] hasta [${destino}].
+    
+    PREFERENCIAS DEL USUARIO:
+    - Estilo: [${intensidad}] (scenic = paisajes, curvy = muchas curvas, adventure = secundarias remotas).
+    - Duración/Desvío: [${duracion}] 
+      * Si es "corta": Haz la ruta lo más directa posible hacia el destino, pero usando carreteras secundarias en lugar de autovías. Usa pocos waypoints (2-3).
+      * Si es "media": Haz desvíos lógicos para buscar buenas curvas, pero manteniendo una dirección general hacia el destino. (4-5 waypoints).
+      * Si es "larga": Crea una ruta épica de día completo. Da grandes rodeos deliberados para pasar por las mejores zonas moteras de la región. (6-8 waypoints).
 
-    REGLAS ESTRICTAS PARA LA RUTA:
-    1. EVITAR AUTOVÍAS: Diseña el trayecto alejándote de las autopistas y autovías principales (A- y AP-).
-    2. PUNTOS DE PASO (WAYPOINTS): Selecciona entre 4 y 8 waypoints intermedios que fuercen al GPS a ir por las carreteras más divertidas.
-    3. ORDEN LÓGICO (CRÍTICO): Los waypoints DEBEN estar ordenados secuencialmente desde el origen hasta el destino. Si se visitan en orden, la ruta debe tener sentido y no ir de un lado a otro.
-    4. NOMENCLATURA GOOGLE MAPS: Usa nombres que el buscador de Google Maps entienda a la primera (ejemplo: "Pueblo, Provincia, España" o "Puerto de la Cruz Verde, Madrid, España").
+    REGLAS ESTRICTAS:
+    1. EVITAR AUTOVÍAS: Aléjate de las autopistas (A- y AP-).
+    2. CARRETERAS ESPECÍFICAS: Para fijar bien la ruta, usa nombres de poblaciones, puertos de montaña, o MEJOR AÚN, nombres exactos de carreteras (ejemplo: "Carretera A-397, Málaga, España" o "Puerto de Velefique, España").
+    3. ORDEN LÓGICO: Los waypoints DEBEN estar en perfecto orden geográfico para evitar que Google Maps haga rutas en zig-zag.
 
     FORMATO DE SALIDA (JSON ESTRICTO):
-    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques de código markdown, con esta estructura exacta:
+    Devuelve ÚNICAMENTE un objeto JSON válido, sin bloques markdown (\`\`\`json), con esta estructura:
     {
-      "explanation": "Breve descripción emocionante de 3 líneas sobre qué hace especial a esta ruta y qué tipo de curvas o paisajes se van a encontrar.",
-      "waypoints": ["Punto 1", "Punto 2", "Punto 3", "Punto 4"]
+      "explanation": "Breve descripción de 3 líneas sobre la ruta, mencionando si es directa o si tiene grandes desvíos según lo que pidió el usuario.",
+      "waypoints": ["Punto 1", "Punto 2"]
     }
   `;
 
